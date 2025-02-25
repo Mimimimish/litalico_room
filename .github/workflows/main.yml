@@ -1,0 +1,40 @@
+name: Detect Merge Conflicts
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  detect-conflicts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Check for merge conflicts
+        run: |
+          git fetch origin main
+          git checkout ${{ github.event.pull_request.head.ref }}
+          if ! git merge --no-commit --no-ff origin/main; then
+            echo "::set-output name=conflict::true"
+          else
+            echo "::set-output name=conflict::false"
+          fi
+        id: check_conflicts
+
+      - name: Post a comment if there are conflicts
+        if: steps.check_conflicts.outputs.conflict == 'true'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const issueNumber = context.issue.number;
+            const message = `
+              🚨 **Merge Conflict Detected!**
+              This PR has conflicts with the \`main\` branch. 
+              Please resolve the conflicts before merging.
+            `;
+            github.rest.issues.createComment({
+              ...context.repo,
+              issue_number: issueNumber,
+              body: message
+            });
