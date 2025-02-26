@@ -110,6 +110,10 @@ Assets
 ｜ ┣ Models（部屋など）
 ｜ ┣ Prefabs
 ｜ ┣ Scenes
+｜ | ┣ Start
+｜ ｜ ┣ Play
+｜ ｜ ┣ Celebrate
+｜ ｜ ┗ End
 ｜ ┣ Scripts
 ｜ ┣ Textures（キャラクターの顔素材はこちらに配置）
 ┣（Asset Storeなど外部から取得したもの）
