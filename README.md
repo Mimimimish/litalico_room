@@ -54,14 +54,14 @@
 - ロゴと「Press A」のグラデーション表示
 - だおだおが歩いたり止まったりする（アニメーション解決次第）
 - Aボタン押下で別シーンへ移動
-- branch名
+- branch名：start
 
 ### **Play Scene**
 - キャラクター操作プログラム
 - 話しかける機能
 - 吹き出し表示機能
 - 教室を歩き回り、メンバーに話しかけられるシステム
-- branch名
+- branch名：play
 
 #### **参考にしたい動画**
 🔗 [参考動画](https://youtu.be/ta_L_qoMaqc)
@@ -69,10 +69,10 @@
 ### **Celebrate Scene**
 - Play シーンで誰かに話しかけたらお祝いストーリー進行
 - ダイアローグを使用してお祝いシーンを演出
-- branch名
+- branch名：celebrate
 
 ### **Ending Scene**
-- branch名
+- branch名：end
 
 ---
 
