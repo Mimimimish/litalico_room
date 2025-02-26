@@ -43,7 +43,7 @@
 - 作成したモデルをGoogle Driveにアップロード
 
 ### **しゃけ**
-- UnityでSceneを一個担当
+- UnityでPlaySceneを担当
 
 ---
 
