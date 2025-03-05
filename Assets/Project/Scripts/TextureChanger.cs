@@ -11,8 +11,19 @@ public class TextureChanger : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
+
+        if (targetMaterial == null)
+        {
+            Debug.LogError("targetMaterial が設定されていません！");
+        }
+        else
+        {
+            Debug.Log("targetMaterial: " + targetMaterial.name);
+        }
+
         targetMaterial.mainTexture = blinkTexture; // 初期テクスチャ
     }
+
 
     // Animation Event で呼び出す
     public void ChangeToBlinkTexture()
