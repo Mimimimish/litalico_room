@@ -29,8 +29,10 @@ public class TextureChanger : MonoBehaviour
     }
     public void ChangeToSmileTexture()
     {
-        targetMaterial.mainTexture = smileTexture;
         Debug.Log("smile");
+        targetMaterial.mainTexture = smileTexture;
+        Debug.Log("Current Texture: " + targetMaterial.mainTexture.name);
         animator.Play("smile"); // smileアニメーションを再生
     }
+
 }
