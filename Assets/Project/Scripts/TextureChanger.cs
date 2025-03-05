@@ -5,6 +5,7 @@ public class TextureChanger : MonoBehaviour
     public Material targetMaterial; // Albedoを変更するマテリアル
     public Texture blinkTexture;    // Blink用のテクスチャ
     public Texture talkTexture;     // Talk用のテクスチャ
+    public Texture smileTexture;     // Talk用のテクスチャ
     private Animator animator;
 
     void Start()
@@ -14,9 +15,22 @@ public class TextureChanger : MonoBehaviour
     }
 
     // Animation Event で呼び出す
+    public void ChangeToBlinkTexture()
+    {
+        targetMaterial.mainTexture = blinkTexture;
+        Debug.Log("blink");
+        animator.Play("blink"); // blinkアニメーションを再生
+    }
     public void ChangeToTalkTexture()
     {
         targetMaterial.mainTexture = talkTexture;
+        Debug.Log("talk");
         animator.Play("talk"); // talkアニメーションを再生
+    }
+    public void ChangeToSmileTexture()
+    {
+        targetMaterial.mainTexture = smileTexture;
+        Debug.Log("smile");
+        animator.Play("smile"); // smileアニメーションを再生
     }
 }
