@@ -7,9 +7,9 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: daoidle Variant 1
+  m_Name: tomoidle Variant 1
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
-  m_Parent: {fileID: -876546973899608171, guid: 1ee984aa1da0f4bad8c913c029f6fcb6, type: 3}
+  m_Parent: {fileID: -6922793697723135513, guid: 3e9d7d1ed2c7f4b52a0057afe6d9dc7e, type: 3}
   m_ModifiedSerializedProperties: 16
   m_ValidKeywords:
   - _ALPHATEST_ON
@@ -26,7 +26,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: a78b42d2689b6406682fc939b30c5b05, type: 3}
+        m_Texture: {fileID: 2800000, guid: 852088b4c5e454c32a551f0071c753f7, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
