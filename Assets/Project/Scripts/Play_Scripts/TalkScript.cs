@@ -23,9 +23,9 @@ public class TalkScript : MonoBehaviour
 
     public bool isTalking { get; private set; }
 
-    private bool isInsideCollider = false;
+    public bool isInsideCollider { get; private set; }
     private int currentLine = 0;
-    private bool isTyping = false; 
+    private bool isTyping = false;
 
     void Start()
     {
