@@ -5,8 +5,7 @@ using UnityEngine;
 public class CameraMove : MonoBehaviour
 {
     public float moveSpeed = 5f;
-    public TalkScript talkScript; // TalkScriptの参照
-
+    public Player talkScript; // TalkScriptの参照
     private Vector3 moveDirection = Vector3.zero;
 
     void Start()

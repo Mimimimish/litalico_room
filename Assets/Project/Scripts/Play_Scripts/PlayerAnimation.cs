@@ -4,15 +4,35 @@ using UnityEngine;
 
 public class PlayerAnimation : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public Animator animator;
+    public Animator animatorTalking;
+    public Player player;
+
     void Start()
     {
-        
+        animator = GetComponent<Animator>();
+        animatorTalking = GetComponent<Animator>();
+        player = GetComponent<Player>(); 
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        if (player.isPlayerMoving)
+        {
+            animator.SetBool("Walking", true);
+        }
+        else
+        {
+            animator.SetBool("Walking", false);
+        }
+
+        if (player.isTalking)
+        {
+            animatorTalking.SetBool("Talking", true);
+        }
+        else
+        {
+            animatorTalking.SetBool("Talking", false);
+        }
     }
 }

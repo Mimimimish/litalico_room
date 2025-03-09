@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class CameraScript : MonoBehaviour
 {
-    public TalkScript currentTalkScript;
-    public Transform talkPosition;
-    public Transform defaultPosition;
+    public Player currentTalkScript;
+    public Transform originalPosition; // 会話開始前のカメラ位置を保存
+    public Vector3 talkPosition;
     public float speed = 5f;
+    private bool hasSavedPosition = false; // 位置を保存したかどうか
 
     void Update()
     {
@@ -15,11 +16,18 @@ public class CameraScript : MonoBehaviour
         {
             if (currentTalkScript.isTalking)
             {
-                MoveCamera(talkPosition.position);
+                if (!hasSavedPosition)
+                {
+                    hasSavedPosition = true;
+                }
+                MoveCamera(talkPosition);
             }
-            else
+            if (currentTalkScript.isTalking == false)
             {
-                MoveCamera(defaultPosition.position);
+                if (hasSavedPosition == true)
+                {
+                    MoveCameraReset(originalPosition.position); // 会話終了時に元の位置へ戻る
+                }
             }
         }
     }
@@ -31,5 +39,21 @@ public class CameraScript : MonoBehaviour
             targetPos, 
             speed * Time.deltaTime
         );
+        transform.rotation = Quaternion.Euler(0, 0, 0);
+    }
+
+    void MoveCameraReset(Vector3 targetPos)
+    {
+        transform.position = Vector3.Lerp(
+            transform.position, 
+            targetPos, 
+            speed * Time.deltaTime
+        );
+        transform.rotation = Quaternion.Euler(40f, 0, 0);
+    }
+
+    public void SetTalkPosition(Vector3 position)
+    {
+        talkPosition = position;
     }
 }
