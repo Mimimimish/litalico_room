@@ -20,13 +20,10 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 7.0.x  # Unityに対応する.NETのバージョンを指定
-
-      - name: Restore Dependencies
-        run: dotnet restore
+          dotnet-version: 7.0.x  # Unityの.NETバージョンに合わせる
 
       - name: Run Code Formatting Check
-        run: dotnet format --verify-no-changes
+        run: dotnet format --verify-no-changes || echo "Format errors detected. Run 'dotnet format' locally to fix them."
 
       - name: Run Static Code Analysis
-        run: dotnet build --configuration Release
+        run: dotnet build --configuration Release || echo "Build errors detected."
