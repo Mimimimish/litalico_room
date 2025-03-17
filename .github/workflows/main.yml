@@ -11,7 +11,7 @@ on:
 jobs:
   build:
     name: Build Unity Project
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04  # ubuntu-latest ではなく特定のバージョンを指定
 
     steps:
       - name: Checkout Repository
@@ -28,38 +28,11 @@ jobs:
       - name: Set up Unity
         uses: game-ci/unity-builder@v2
         with:
-          unityVersion: 2022.3.10f1  # Unityのバージョンを指定
-          targetPlatform: StandaloneWindows64  # 他のプラットフォームなら変更
+          unityVersion: 2022.3.10f1
+          targetPlatform: StandaloneWindows64
 
       - name: Upload Build Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4  # v4 に変更
         with:
           name: unity-build
           path: build/StandaloneWindows64
-
-  release:
-    name: Create Release
-    needs: build
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Download Build Artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: unity-build
-          path: build/StandaloneWindows64
-
-      - name: Create Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: v1.0.${{ github.run_number }}
-          name: Unity Build v1.0.${{ github.run_number }}
-          draft: false
-          prerelease: false
-          files: build/StandaloneWindows64/*
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
