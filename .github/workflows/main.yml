@@ -1,4 +1,4 @@
-name: Unity CI/CD
+name: Unity Code Check
 
 on:
   push:
@@ -9,30 +9,24 @@ on:
       - main
 
 jobs:
-  build:
-    name: Build Unity Project
-    runs-on: ubuntu-22.04  # ubuntu-latest ではなく特定のバージョンを指定
+  lint:
+    name: Code Style and Linting
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Cache Library Folder
-        uses: actions/cache@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
         with:
-          path: Library
-          key: Library-${{ runner.os }}-${{ github.sha }}
-          restore-keys: |
-            Library-${{ runner.os }}-
+          dotnet-version: 7.0.x  # Unityに対応する.NETのバージョンを指定
 
-      - name: Set up Unity
-        uses: game-ci/unity-builder@v2
-        with:
-          unityVersion: 2022.3.10f1
-          targetPlatform: StandaloneWindows64
+      - name: Restore Dependencies
+        run: dotnet restore
 
-      - name: Upload Build Artifact
-        uses: actions/upload-artifact@v4  # v4 に変更
-        with:
-          name: unity-build
-          path: build/StandaloneWindows64
+      - name: Run Code Formatting Check
+        run: dotnet format --verify-no-changes
+
+      - name: Run Static Code Analysis
+        run: dotnet build --configuration Release
