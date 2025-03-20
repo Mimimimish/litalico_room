@@ -85,7 +85,7 @@ public class Player : MonoBehaviour
         if (other.CompareTag("NPC"))
         {
             Vector3 npcPosition = other.transform.position;
-            Vector3 talkPos = new Vector3(npcPosition.x, 1f, npcPosition.z - 5f);
+            Vector3 talkPos = new Vector3(npcPosition.x, 1.5f, npcPosition.z - 5.5f);
 
             if (cameraScript != null)
             {
