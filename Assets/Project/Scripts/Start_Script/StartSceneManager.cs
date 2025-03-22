@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class StartSceneManager : MonoBehaviour
 {
+    private bool isFadingOut = false;
     void Start()
     {
         
@@ -12,8 +13,15 @@ public class StartSceneManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            SceneManager.LoadScene("classroom");
+        if (Input.GetKeyDown(KeyCode.Space) && !isFadingOut) {
+            StartCoroutine(WaitFadeOut());
+            isFadingOut = true;
         }
+    }
+
+    IEnumerator WaitFadeOut()
+    {
+        yield return new WaitForSeconds(5);
+        SceneManager.LoadScene("classroom");
     }
 }
