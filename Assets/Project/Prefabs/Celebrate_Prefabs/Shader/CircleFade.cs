@@ -6,6 +6,7 @@ public class CircleFade : MonoBehaviour
 {
     public Material fadeMaterial;
     public float fadeDuration = 2.0f;
+    public bool fadeIn = true;
 
     private void Start()
     {
@@ -23,5 +24,6 @@ public class CircleFade : MonoBehaviour
             yield return null;
         }
         fadeMaterial.SetFloat("_Radius", 1f);
+        fadeIn = false;
     }
 }
