@@ -4,17 +4,15 @@ using UnityEngine;
 
 public class DaoMove : MonoBehaviour
 {
-    const int ACTION_TH = 4; //歩行の閾値
     const float SPEED = 0.5f;
 
     Animator anim;
-    public int actionValue;
-    private bool isRotating = false;
+    private bool isWalking = false;
+    private int rotateTheta;
     private int rotateDir;
 
     void Start()
     {
-        actionValue = 10;
         anim = GetComponent<Animator>();
 
         StartCoroutine("DecideAction");
@@ -22,43 +20,60 @@ public class DaoMove : MonoBehaviour
 
     void Update()
     {
-        if (ACTION_TH < actionValue)
-        {
+        if (isWalking) {
             anim.SetBool("isWalking", true);
 
             Vector3 velocity = transform.rotation * new Vector3(0, 0, SPEED);
             transform.position += velocity * Time.deltaTime;
         }
-        else
-        {
-            if (isRotating)
-            {
-                anim.SetBool("isWalking", true);
-            }
-            else
-            {
-                anim.SetBool("isWalking", false);
-            }
+        else {
+            anim.SetBool("isWalking", false);
         }
     }
 
     IEnumerator DecideAction()
     {
-        while(true)
-        {
-            actionValue = Random.Range(0, 10);
-            rotateDir = Random.Range(-1, 1);
-            if (actionValue < ACTION_TH && rotateDir != 0)
-            {
-                isRotating = true;
-                for (int i = 0; i < actionValue * 10; i++)
-                {
-                    transform.Rotate(0, rotateDir, 0);
-                    yield return new WaitForSeconds(0.01f);
-                }
-                isRotating = false;
+        while(true) {
+            for (int i = 0; i < 4; i++) {
+                isWalking = true;
+                yield return new WaitForSeconds(2);
+                isWalking = false;
+                yield return new WaitForSeconds(1);
+                isWalking = true;
+                yield return new WaitForSeconds(3);
+
+                rotateTheta = 90;
+                rotateDir = 1;
+                StartCoroutine("RotateModel");
+                yield return new WaitForSeconds(2);
             }
-            yield return new WaitForSeconds(1);
+
+            for (int i = 0; i < 4; i++) {
+                isWalking = true;
+                yield return new WaitForSeconds(2);
+                isWalking = false;
+                yield return new WaitForSeconds(2);
+                isWalking = true;
+                yield return new WaitForSeconds(1);
+                isWalking = false;
+                yield return new WaitForSeconds(4);
+
+                rotateTheta = 90;
+                rotateDir = -1;
+                StartCoroutine("RotateModel");
+                yield return new WaitForSeconds(2);
+            }
         }
+    }
+
+    IEnumerator RotateModel()
+    {
+        isWalking = true;
+
+        for (int i = 0; i < rotateTheta; i++) {
+            transform.Rotate(0, rotateDir, 0);
+            yield return new WaitForSeconds(0.01f);
+        }
+        isWalking = false;
     }
 }
