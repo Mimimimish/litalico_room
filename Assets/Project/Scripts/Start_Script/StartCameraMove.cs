@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraMove : MonoBehaviour
+public class StartCameraMove : MonoBehaviour
 {
     private GameObject target;
     private int rnd_num;
