@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraMove : MonoBehaviour
 {
-    public float moveSpeed = 5f;
+    public float moveSpeed = 5f;//カメラ移動速度
     public Player talkScript; // TalkScriptの参照
     private Vector3 moveDirection = Vector3.zero;
 
@@ -26,12 +26,18 @@ public class CameraMove : MonoBehaviour
     }
 
     void Move()
+{
+    float x = Input.GetAxis("Horizontal");
+    float z = Input.GetAxis("Vertical");
+
+    moveDirection = new Vector3(x, 0, z).normalized;
+    Vector3 nextPosition = transform.position + moveDirection * moveSpeed * Time.deltaTime;
+
+    // Raycast で壁を検知（前方1m以内に壁があるかチェック）
+    if (!Physics.Raycast(transform.position, moveDirection, 1f))
     {
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
-
-        moveDirection = new Vector3(x, 0, z).normalized;
-
-        transform.Translate(moveDirection * moveSpeed * Time.deltaTime, Space.World);
+        transform.position = nextPosition;
     }
+}
+
 }
