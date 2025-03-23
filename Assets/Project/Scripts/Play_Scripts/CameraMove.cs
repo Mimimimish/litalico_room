@@ -7,9 +7,11 @@ public class CameraMove : MonoBehaviour
     public float moveSpeed = 5f;
     public Player talkScript; // TalkScriptの参照
     public Transform playerTransform; // プレイヤーのTransform
-    public float maxDistance = 3f; // カメラとプレイヤーの最大許容距離
+    public Vector3 offset = new Vector3(0, 5, -10); // カメラとプレイヤーの距離をx, y, zで指定
+    public LayerMask wallLayer; // 壁のレイヤー
 
     private Vector3 moveDirection = Vector3.zero;
+    private List<MeshRenderer> transparentWalls = new List<MeshRenderer>();
 
     void Start()
     {
@@ -21,33 +23,48 @@ public class CameraMove : MonoBehaviour
     {
         if (talkScript != null && talkScript.isTalking)
         {
-            // isTalkingがtrueなら移動を禁止
+            // isTalkingがtrueなら追跡を停止
             return;
         }
 
-        Move();
+        FollowPlayer();
+        CheckWalls();
     }
 
-    void Move()
+    void FollowPlayer()
     {
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
-
-        moveDirection = new Vector3(x, 0, z).normalized;
-
-        // 現在の位置関係を保ったまま新しい位置を計算
-        Vector3 desiredPos = transform.position + moveDirection * moveSpeed * Time.deltaTime;
-
-        if (playerTransform != null)
+        if (playerTransform == null)
         {
-            Vector3 offset = desiredPos - playerTransform.position;
-            if (offset.magnitude > maxDistance)
-            {
-                offset = offset.normalized * maxDistance;
-                desiredPos = playerTransform.position + offset;
-            }
+            return;
         }
 
-        transform.position = desiredPos;
+        // プレイヤーの位置に追従
+        Vector3 desiredPos = playerTransform.position + offset;
+
+        transform.position = Vector3.Lerp(transform.position, desiredPos, moveSpeed * Time.deltaTime);
+    }
+
+    void CheckWalls()
+    {
+        // 以前透明にした壁を元に戻す
+        foreach (MeshRenderer rend in transparentWalls)
+        {
+            rend.enabled = true;
+        }
+        transparentWalls.Clear();
+
+        // カメラとプレイヤーの間にある壁を透明にする
+        Vector3 direction = playerTransform.position - transform.position;
+        RaycastHit[] hits = Physics.RaycastAll(transform.position, direction, direction.magnitude, wallLayer);
+
+        foreach (RaycastHit hit in hits)
+        {
+            MeshRenderer rend = hit.collider.GetComponent<MeshRenderer>();
+            if (rend != null)
+            {
+                rend.enabled = false; // Mesh Rendererをオフにする
+                transparentWalls.Add(rend);
+            }
+        }
     }
 }
