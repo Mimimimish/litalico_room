@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
 {
     public float moveSpeed = 5f;
     public float rotationSpeed = 10f;
+    public float angleDegrees = -30f;
     private Vector3 moveDirection = Vector3.zero;
     [SerializeField]
     public bool isplayer;
@@ -69,7 +70,7 @@ public class Player : MonoBehaviour
         if (talkChecker.talkableNPC == null) return;
 
         Vector3 direction = (talkChecker.talkableNPC.transform.position - transform.position).normalized;
-        direction.y = 0; 
+        direction.y = 0;
 
         Quaternion targetRotation = Quaternion.LookRotation(direction);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
@@ -84,13 +85,25 @@ public class Player : MonoBehaviour
     {
         if (other.CompareTag("NPC"))
         {
-            Vector3 npcPosition = other.transform.position;
-            Vector3 talkPos = new Vector3(npcPosition.x, 1.5f, npcPosition.z - 5.5f);
+            float angleDeg = angleDegrees;
 
-            if (cameraScript != null)
+            Vector3 otherXZ = new Vector3(other.transform.position.x, 0, other.transform.position.z);
+            Vector3 thisXZ = new Vector3(this.transform.position.x, 0, this.transform.position.z);
+            Vector3 midPosition = Vector3.Lerp(otherXZ, thisXZ, 0.5f);
+            Vector3 dir = otherXZ - thisXZ;
+            Vector3 perpendicular = new Vector3(-dir.z, 0, dir.x).normalized;
+            if (Physics.Raycast(midPosition, perpendicular, 5.5f))
             {
-                cameraScript.SetTalkPosition(talkPos);
+                perpendicular = -perpendicular;
+                angleDeg = -angleDeg;
             }
+            Quaternion rotation = Quaternion.AngleAxis(angleDeg, Vector3.up);
+            Vector3 rotatedDir = rotation * perpendicular;
+            Vector3 talkPos = midPosition + rotatedDir * 5.5f;
+            talkPos.y = this.transform.position.y;
+            Vector3 lookTarget = midPosition;
+
+            cameraScript?.SetTalkPosition(talkPos, lookTarget);
         }
     }
 }

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641263, b: 0.57481724, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -555,7 +555,8 @@ MonoBehaviour:
   currentTalkScript: {fileID: 328093416}
   originalPosition: {fileID: 357458009}
   talkPosition: {x: 0, y: 0, z: 0}
-  speed: 10
+  lookTarget: {x: 0, y: 0, z: 0}
+  speed: 5
 --- !u!114 &123726988
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1222,6 +1223,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 10
   rotationSpeed: 10
+  angleDegrees: -30
   isplayer: 0
   talkChecker: {fileID: 328093415}
   cameraScript: {fileID: 123726987}
@@ -5813,6 +5815,10 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: -1807970279642858887, guid: 7c64e300e81d34bf89fe917e9ae223ff, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 683731252645644970, guid: 7c64e300e81d34bf89fe917e9ae223ff, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 8
@@ -6347,6 +6353,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 10
   rotationSpeed: 10
+  angleDegrees: 30
   isplayer: 1
   talkChecker: {fileID: 1459093737}
   cameraScript: {fileID: 123726987}
