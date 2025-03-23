@@ -58,7 +58,7 @@ public class DialogueManager_C : MonoBehaviour
 
     IEnumerator WaitForCondition()
     {
-        yield return new WaitUntil(() => circleFade.fadeIn == false);
+        yield return new WaitUntil(() => circleFade.fadeIn == true);
         StartDialogue(); // 条件が満たされたら実行
     }
 
@@ -123,16 +123,21 @@ public class DialogueManager_C : MonoBehaviour
 
     public void EndDialogue()
     {
+        if (talk_finish_C) return; // すでに終了処理が走っていたら何もしない
+        talk_finish_C = true; // 会話終了フラグを立てる
         UI_Dialogue_C.SetActive(false);
         voiceSource_C.Stop(); // 会話終了時に音も止める
-        talk_finish_C = true;
-        //StartCoroutine(BGMStart());
+        StartCoroutine(BGMStart());
     }
+
     IEnumerator BGMStart()
     {
         yield return new WaitForSeconds(0.05f);
+
+        // もし現在再生中のClipがBGMClip_Cなら再生しない
+        if (voiceSource_C.clip == BGMClip_C && voiceSource_C.isPlaying) yield break;
+
         voiceSource_C.clip = BGMClip_C;
-        voiceSource_C.loop = true; // ループ再生
         voiceSource_C.Play();
     }
 }

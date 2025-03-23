@@ -1,0 +1,60 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using TMPro;
+
+public class EndRollManager : MonoBehaviour
+{
+    [SerializeField, Header("【別スクリプトの参照】")]
+    public CircleFade circleFade;
+
+    [SerializeField, Header("【EndrollのUI】")]
+    public GameObject blackBack;
+    public TextMeshProUGUI endrollPrefab; // クローンの元となるテキストUI
+    public Transform spawnPoint;  // テキストが生成される位置
+    public Transform deletePoint; // テキストが削除される位置
+
+    [SerializeField, Header("【Endrollデータ】")]
+    public EndrollData endrollData; // ScriptableObjectで管理するデータ
+
+    [SerializeField, Header("【スクロール設定】")]
+    public float scrollSpeed = 50f; // テキストが上に流れる速度
+    public float spawnInterval = 3.0f; // 文字を出す間隔（秒）
+
+    void Start()
+    {
+        blackBack.SetActive(false);
+        StartCoroutine(Endroll());
+    }
+
+    IEnumerator Endroll()
+    {
+        yield return new WaitUntil(() => circleFade.fadeOut == true);
+        blackBack.SetActive(true);
+
+        foreach (string text in endrollData.endrollTexts)
+        {
+            CreateEndrollText(text);
+            yield return new WaitForSeconds(spawnInterval);
+        }
+    }
+
+    void CreateEndrollText(string textContent)
+    {
+        // クローンを作成し、親をblackBackに設定
+        TextMeshProUGUI newText = Instantiate(endrollPrefab, spawnPoint.position, Quaternion.identity, blackBack.transform);
+        newText.text = textContent; // テキスト内容を設定
+        StartCoroutine(MoveAndDestroy(newText));
+    }
+
+    IEnumerator MoveAndDestroy(TextMeshProUGUI text)
+    {
+        while (text.transform.position.y < deletePoint.position.y)
+        {
+            text.transform.position += Vector3.up * scrollSpeed * Time.deltaTime;
+            yield return null;
+        }
+
+        Destroy(text.gameObject); // 画面上部を超えたら削除
+    }
+}
