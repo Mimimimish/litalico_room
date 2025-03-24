@@ -136,7 +136,7 @@ public class DialogueManager_C : MonoBehaviour
 
         // もし現在再生中のClipがBGMClip_Cなら再生しない
         if (voiceSource_C.clip == BGMClip_C && voiceSource_C.isPlaying) yield break;
-
+        voiceSource_C.loop = false; // ループ再生
         voiceSource_C.clip = BGMClip_C;
         voiceSource_C.Play();
     }

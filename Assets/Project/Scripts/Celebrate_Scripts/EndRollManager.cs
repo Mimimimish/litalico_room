@@ -13,6 +13,7 @@ public class EndRollManager : MonoBehaviour
     public TextMeshProUGUI endrollPrefab; // クローンの元となるテキストUI
     public Transform spawnPoint;  // テキストが生成される位置
     public Transform deletePoint; // テキストが削除される位置
+    public Transform centerPoint; // 「おめでとう！！」の最終位置
 
     [SerializeField, Header("【Endrollデータ】")]
     public EndrollData endrollData; // ScriptableObjectで管理するデータ
@@ -37,6 +38,12 @@ public class EndRollManager : MonoBehaviour
             CreateEndrollText(text);
             yield return new WaitForSeconds(spawnInterval);
         }
+
+        // すべてのエンドロールが終わったら10秒待機
+        yield return new WaitForSeconds(10f);
+        
+        // 最後のメッセージを表示
+        ShowFinalMessage("卒業おめでとう！！");
     }
 
     void CreateEndrollText(string textContent)
@@ -56,5 +63,27 @@ public class EndRollManager : MonoBehaviour
         }
 
         Destroy(text.gameObject); // 画面上部を超えたら削除
+    }
+
+    void ShowFinalMessage(string message)
+    {
+        TextMeshProUGUI finalText = Instantiate(endrollPrefab, spawnPoint.position, Quaternion.identity, blackBack.transform);
+        finalText.text = message;
+        finalText.fontSize = 80; // 大きめの文字サイズに設定
+        finalText.alignment = TextAlignmentOptions.Center;
+
+        StartCoroutine(MoveToCenter(finalText));
+    }
+
+    IEnumerator MoveToCenter(TextMeshProUGUI text)
+    {
+        while (text.transform.position.y < centerPoint.position.y)
+        {
+            text.transform.position += Vector3.up * scrollSpeed * Time.deltaTime;
+            yield return null;
+        }
+
+        // ぴったり中央で固定
+        text.transform.position = centerPoint.position;
     }
 }
