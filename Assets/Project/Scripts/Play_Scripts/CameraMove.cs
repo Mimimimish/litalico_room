@@ -11,7 +11,6 @@ public class CameraMove : MonoBehaviour
     public LayerMask wallLayer; // 壁のレイヤー
 
     private Vector3 moveDirection = Vector3.zero;
-    private List<MeshRenderer> transparentWalls = new List<MeshRenderer>();
 
     void Start()
     {
@@ -28,7 +27,6 @@ public class CameraMove : MonoBehaviour
         }
 
         FollowPlayer();
-        CheckWalls();
     }
 
     void FollowPlayer()
@@ -38,33 +36,21 @@ public class CameraMove : MonoBehaviour
             return;
         }
 
-        // プレイヤーの位置に追従
+        // プレイヤーの位置に対する理想的なカメラ位置
         Vector3 desiredPos = playerTransform.position + offset;
 
+        // 壁との衝突を確認
+        Vector3 direction = desiredPos - playerTransform.position;
+        float distance = direction.magnitude;
+        RaycastHit hit;
+
+        // 壁に当たる場合は、その壁の手前まで移動
+        if (Physics.Raycast(playerTransform.position, direction.normalized, out hit, distance, wallLayer))
+        {
+            desiredPos = hit.point - direction.normalized * 0.2f; // 壁の手前に配置
+        }
+
+        // カメラをスムーズに移動
         transform.position = Vector3.Lerp(transform.position, desiredPos, moveSpeed * Time.deltaTime);
-    }
-
-    void CheckWalls()
-    {
-        // 以前透明にした壁を元に戻す
-        foreach (MeshRenderer rend in transparentWalls)
-        {
-            rend.enabled = true;
-        }
-        transparentWalls.Clear();
-
-        // カメラとプレイヤーの間にある壁を透明にする
-        Vector3 direction = playerTransform.position - transform.position;
-        RaycastHit[] hits = Physics.RaycastAll(transform.position, direction, direction.magnitude, wallLayer);
-
-        foreach (RaycastHit hit in hits)
-        {
-            MeshRenderer rend = hit.collider.GetComponent<MeshRenderer>();
-            if (rend != null)
-            {
-                rend.enabled = false; // Mesh Rendererをオフにする
-                transparentWalls.Add(rend);
-            }
-        }
     }
 }

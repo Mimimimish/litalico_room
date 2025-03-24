@@ -16,6 +16,8 @@ public class Player : MonoBehaviour
     public CameraScript cameraScript;
     public bool isPlayerMoving { get; private set; }
 
+    public ObjectMove objectmove;
+
     void Start()
     {
         talkChecker = GetComponent<TalkChecker>();
@@ -36,6 +38,7 @@ public class Player : MonoBehaviour
             {
                 DialogueManager.instance.StartDialogue(talkChecker.talkableNPC);
                 isTalking = true;
+                objectmove.CountUp();
             }
         }
 
