@@ -62,6 +62,7 @@ public class DialogueManager_C : MonoBehaviour
         StartDialogue(); // 条件が満たされたら実行
     }
 
+    // 会話の実行関数
     public void StartDialogue()
     {
         sentences_C.Clear();
@@ -74,6 +75,7 @@ public class DialogueManager_C : MonoBehaviour
         DisplaySentence();
     }
 
+    // 会話の表示関数
     public void DisplaySentence()
     {
         Next_bottun_C.SetActive(false);
@@ -97,6 +99,7 @@ public class DialogueManager_C : MonoBehaviour
         typingCoroutine_C = StartCoroutine(TypeSentence(sentence));
     }
 
+    // 会話を一文字ずつ表示させるコルーチン&会話音
     IEnumerator TypeSentence(string sentence)
     {
         dialogText_C.text = ""; // テキストをリセット
@@ -121,6 +124,7 @@ public class DialogueManager_C : MonoBehaviour
         typingCoroutine_C = null; // コルーチン終了
     }
 
+    // 会話の終わり時に動く関数
     public void EndDialogue()
     {
         if (talk_finish_C) return; // すでに終了処理が走っていたら何もしない
@@ -130,6 +134,7 @@ public class DialogueManager_C : MonoBehaviour
         StartCoroutine(BGMStart());
     }
 
+    // endrollのときのBGM再生　（）
     IEnumerator BGMStart()
     {
         yield return new WaitForSeconds(0.05f);
