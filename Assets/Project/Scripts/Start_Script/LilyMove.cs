@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TomoMove : MonoBehaviour
+public class LilyMove : MonoBehaviour
 {
     const float SPEED = 0.5f;
 
@@ -34,28 +34,30 @@ public class TomoMove : MonoBehaviour
     IEnumerator DecideAction()
     {
         while(true) {
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 3; i++) {
                 isWalking = true;
-                yield return new WaitForSeconds(2.7f);
+                yield return new WaitForSeconds(1.7f);
                 isWalking = false;
-                yield return new WaitForSeconds(0.3f);
+                yield return new WaitForSeconds(0.5f);
                 isWalking = true;
                 yield return new WaitForSeconds(1.3f);
 
-                rotateTheta = 90;
-                rotateDir = 1;
+                rotateTheta = 120;
+                rotateDir = -1;
                 StartCoroutine("RotateModel");
-                yield return new WaitForSeconds(2);
+                yield return new WaitForSeconds(3);
             }
 
             for (int i = 0; i < 4; i++) {
                 isWalking = true;
-                yield return new WaitForSeconds(2);
+                yield return new WaitForSeconds(1.2f);
                 isWalking = false;
-                yield return new WaitForSeconds(1.1f);
+                yield return new WaitForSeconds(1.2f);
+                isWalking = true;
+                yield return new WaitForSeconds(1.8f);
 
                 rotateTheta = 90;
-                rotateDir = -1;
+                rotateDir = 1;
                 StartCoroutine("RotateModel");
                 yield return new WaitForSeconds(2);
             }

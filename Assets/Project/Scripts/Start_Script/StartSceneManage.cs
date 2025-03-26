@@ -31,6 +31,6 @@ public class StartSceneManage : MonoBehaviour
     IEnumerator WaitFadeOut()
     {
         yield return new WaitForSeconds(5);
-        SceneManager.LoadScene("classroom");
+        SceneManager.LoadScene("Play");
     }
 }

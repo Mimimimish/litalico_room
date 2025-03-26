@@ -36,11 +36,11 @@ public class DaoMove : MonoBehaviour
         while(true) {
             for (int i = 0; i < 4; i++) {
                 isWalking = true;
-                yield return new WaitForSeconds(2);
+                yield return new WaitForSeconds(1.5f);
                 isWalking = false;
-                yield return new WaitForSeconds(1);
+                yield return new WaitForSeconds(1.1f);
                 isWalking = true;
-                yield return new WaitForSeconds(3);
+                yield return new WaitForSeconds(3.5f);
 
                 rotateTheta = 90;
                 rotateDir = 1;
@@ -50,13 +50,13 @@ public class DaoMove : MonoBehaviour
 
             for (int i = 0; i < 4; i++) {
                 isWalking = true;
-                yield return new WaitForSeconds(2);
+                yield return new WaitForSeconds(1.9f);
                 isWalking = false;
-                yield return new WaitForSeconds(2);
+                yield return new WaitForSeconds(0.9f);
                 isWalking = true;
-                yield return new WaitForSeconds(1);
+                yield return new WaitForSeconds(0.6f);
                 isWalking = false;
-                yield return new WaitForSeconds(4);
+                yield return new WaitForSeconds(3.3f);
 
                 rotateTheta = 90;
                 rotateDir = -1;

@@ -35,13 +35,13 @@ public class MatsuMove : MonoBehaviour
     {
         while(true) {
             isWalking = true;
-            yield return new WaitForSeconds(3);
+            yield return new WaitForSeconds(3.5f);
             isWalking = false;
             yield return new WaitForSeconds(1);
             isWalking = true;
-            yield return new WaitForSeconds(2);
+            yield return new WaitForSeconds(1.5f);
             isWalking = false;
-            yield return new WaitForSeconds(4);
+            yield return new WaitForSeconds(3.3f);
 
             rotateTheta = 180;
             rotateDir = -1;
