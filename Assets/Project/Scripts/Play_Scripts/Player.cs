@@ -86,7 +86,7 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("NPC"))
+        if (other.CompareTag("Dao") || other.CompareTag("Ebi") || other.CompareTag("Tomo") || other.CompareTag("Matsu"))
         {
             float angleDeg = angleDegrees;
 

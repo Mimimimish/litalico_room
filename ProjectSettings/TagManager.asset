@@ -5,6 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - NPC
+  - Dao
+  - Ebi
+  - Tomo
+  - Matsu
   layers:
   - Default
   - TransparentFX

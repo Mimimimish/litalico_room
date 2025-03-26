@@ -7,9 +7,11 @@ public class CameraMove : MonoBehaviour
     public float moveSpeed = 5f;
     public Player talkScript; // TalkScriptの参照
     public Transform playerTransform; // プレイヤーのTransform
-    public Vector3 offset = new Vector3(0, 5, -10); // カメラとプレイヤーの距離をx, y, zで指定
+    public Vector3 offset = new Vector3(0, 5, -10); // 通常カメラオフセット
+    public Vector3 altOffset = new Vector3(0, 8, -5); // 代替視点オフセット
     public LayerMask wallLayer; // 壁のレイヤー
 
+    private bool isUsingAltOffset = false; // どちらの視点を使っているか
     private Vector3 moveDirection = Vector3.zero;
 
     void Start()
@@ -26,6 +28,11 @@ public class CameraMove : MonoBehaviour
             return;
         }
 
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            isUsingAltOffset = !isUsingAltOffset; // オフセットを切り替え
+        }
+
         FollowPlayer();
     }
 
@@ -36,8 +43,11 @@ public class CameraMove : MonoBehaviour
             return;
         }
 
+        // 使用するオフセットを選択
+        Vector3 currentOffset = isUsingAltOffset ? altOffset : offset;
+
         // プレイヤーの位置に対する理想的なカメラ位置
-        Vector3 desiredPos = playerTransform.position + offset;
+        Vector3 desiredPos = playerTransform.position + currentOffset;
 
         // 壁との衝突を確認
         Vector3 direction = desiredPos - playerTransform.position;
