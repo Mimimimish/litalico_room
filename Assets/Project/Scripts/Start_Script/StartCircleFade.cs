@@ -13,14 +13,22 @@ public class StartCircleFade : MonoBehaviour
     private void Start()
     {
         StartCoroutine(FadeIn());
+        StartCoroutine(WaitForStartInput());
     }
 
-    private void Update()
+    IEnumerator WaitForStartInput()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && !isFadingOut)
+        yield return new WaitForSeconds(5);
+
+        while (true)
         {
-            StartCoroutine(FadeOut());
-            isFadingOut = true;
+            if (Input.GetKeyDown(KeyCode.Space) && !isFadingOut)
+            {
+                StartCoroutine(FadeOut());
+                isFadingOut = true;
+                break;
+            }
+            yield return null;
         }
     }
 
