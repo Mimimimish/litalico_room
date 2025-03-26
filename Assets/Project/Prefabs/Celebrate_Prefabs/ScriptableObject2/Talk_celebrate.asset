@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bb9306f8c63e8a4191e3ae3c88ba0aa, type: 3}
   m_Name: Talk_celebrate
   m_EditorClassIdentifier: 
-  talkerName: "\u308A\u308A\u30FC"
+  talkerName: "\u308A\u308A\u30FC,\u307D\u306B\u3087"
   sentences:
   - "\u4ECA\u65E5\u306F\u307F\u3093\u306A\u6765\u3066\u304F\u308C\u3066thank you\uFF01\r"
   - "\u307F\u3093\u306A\u306E\u3053\u308C\u304B\u3089\u306E\u6210\u9577\u3092\u30EA\u30BF\u30EA\u30B3\u753A\u7530\u307F\u3093\u306A\u697D\u3057\u307F\u3057\u3066\u308B\u3088"
