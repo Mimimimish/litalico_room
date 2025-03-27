@@ -12,7 +12,7 @@ EditorBuildSettings:
     path: Assets/Project/Scenes/classroom.unity
     guid: 2f99ead3618344cdc85329d67863d3f8
   - enabled: 1
-    path: Assets/Project/Scenes/celebrate.unity
+    path: Assets/scene/celebrate.unity
     guid: f70c1d2113c054aa2b5b8e3e5ffbbf8b
   - enabled: 1
     path: Assets/Project/Scenes/ending.unity
