@@ -32,6 +32,6 @@ public class StartCameraMove : MonoBehaviour
     {
         Vector3 pos = target.transform.position;
         
-        transform.position = new Vector3(pos.x, pos.y + 11, pos.z + 12.5f);
+        transform.position = new Vector3(pos.x, pos.y + 10.5f, pos.z + 12.5f);
     }
 }
