@@ -2884,7 +2884,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u308A\u308A\u30FC,\u307D\u306B\u3087"
+  m_text: "\u308A\u308A\u30FC            \u307D\u306B\u3087"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 231015b1381940046a8cdebc1fa7235d, type: 2}
   m_sharedMaterial: {fileID: 4806515716734723874, guid: 231015b1381940046a8cdebc1fa7235d, type: 2}
@@ -2917,7 +2917,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 1
+  m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -3154,7 +3154,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 1
+  m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
   m_textAlignment: 65535
@@ -3429,7 +3429,7 @@ MonoBehaviour:
   deletePoint: {fileID: 1127741964}
   centerPoint: {fileID: 1084069993}
   endrollData: {fileID: 11400000, guid: b7a59733b47c53c47af1a605f323250a, type: 2}
-  scrollSpeed: 50
+  scrollSpeed: 70
   spawnInterval: 2
 --- !u!1 &1601639786
 GameObject:
