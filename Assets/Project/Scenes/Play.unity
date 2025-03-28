@@ -573,6 +573,7 @@ MonoBehaviour:
   talkScript: {fileID: 328093416}
   playerTransform: {fileID: 328093417}
   offset: {x: 0, y: 7, z: -6}
+  altOffset: {x: 6, y: 7, z: 0}
   wallLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -1542,6 +1543,7 @@ MonoBehaviour:
   talkScript: {fileID: 328093416}
   playerTransform: {fileID: 328093417}
   offset: {x: 0, y: 5, z: -10}
+  altOffset: {x: 0, y: 8, z: -5}
   wallLayer:
     serializedVersion: 2
     m_Bits: 0
@@ -4023,6 +4025,7 @@ MonoBehaviour:
   talkScript: {fileID: 0}
   playerTransform: {fileID: 0}
   offset: {x: 0, y: 5, z: -10}
+  altOffset: {x: 0, y: 8, z: -5}
   wallLayer:
     serializedVersion: 2
     m_Bits: 0
@@ -6808,6 +6811,18 @@ PrefabInstance:
     - target: {fileID: -5788678578958007773, guid: 7c64e300e81d34bf89fe917e9ae223ff, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: -5617240627703830617, guid: 7c64e300e81d34bf89fe917e9ae223ff, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.295
+      objectReference: {fileID: 0}
+    - target: {fileID: -5617240627703830617, guid: 7c64e300e81d34bf89fe917e9ae223ff, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.005
+      objectReference: {fileID: 0}
+    - target: {fileID: -5617240627703830617, guid: 7c64e300e81d34bf89fe917e9ae223ff, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.729
       objectReference: {fileID: 0}
     - target: {fileID: -5444756629341513694, guid: 7c64e300e81d34bf89fe917e9ae223ff, type: 3}
       propertyPath: m_StaticEditorFlags
