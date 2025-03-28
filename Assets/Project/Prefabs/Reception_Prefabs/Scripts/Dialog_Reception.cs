@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+
 public class Dialog_Reception : MonoBehaviour
 {
     public static Dialog_Reception instance;
@@ -27,6 +28,7 @@ public class Dialog_Reception : MonoBehaviour
     public AudioClip voiceClip_C;      // 再生する音声クリップ
 
     [SerializeField, Header("[BGM]")]
+    public AudioSource BGMSource_C;  // BGMの AudioSource
     public AudioClip BGMClip_C;      // BGM音声クリップ
     // キュー：
     Queue<string> sentences_C = new Queue<string>();
@@ -59,6 +61,9 @@ public class Dialog_Reception : MonoBehaviour
     IEnumerator WaitForCondition()
     {
         yield return new WaitUntil(() => circleFade_reception.fadeIn == true);
+        BGMSource_C.clip = BGMClip_C;
+        BGMSource_C.Play();
+        yield return new WaitForSeconds(0.8f);
         StartDialogue(); // 条件が満たされたら実行
     }
 
@@ -131,9 +136,24 @@ public class Dialog_Reception : MonoBehaviour
         talk_finish_C = true; // 会話終了フラグを立てる
         UI_Dialogue_C.SetActive(false);
         voiceSource_C.Stop(); // 会話終了時に音も止める
+
+        StartCoroutine(FadeOutAndStop(BGMSource_C, 4.0f)); // 4.0秒でフェードアウト
         //StartCoroutine(BGMStart());
     }
 
+    IEnumerator FadeOutAndStop(AudioSource BGMSource, float duration)
+    {
+        float startVolume = BGMSource.volume;
+
+        while (BGMSource.volume > 0)
+        {
+            BGMSource.volume -= startVolume * Time.deltaTime / duration;
+            yield return null;
+        }
+
+        BGMSource.Stop();  // 音を完全に止める
+        BGMSource.volume = startVolume; // 音量を元に戻す（再利用のため）
+    }
     // endrollのときのBGM再生　（）
     IEnumerator BGMStart()
     {
