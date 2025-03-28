@@ -7,8 +7,11 @@ public class CameraMove : MonoBehaviour
     public float moveSpeed = 5f;
     public Player talkScript; // TalkScriptの参照
     public Transform playerTransform; // プレイヤーのTransform
-    public float maxDistance = 3f; // カメラとプレイヤーの最大許容距離
+    public Vector3 offset = new Vector3(0, 5, -10); // 通常カメラオフセット
+    public Vector3 altOffset = new Vector3(0, 8, -5); // 代替視点オフセット
+    public LayerMask wallLayer; // 壁のレイヤー
 
+    private bool isUsingAltOffset = false; // どちらの視点を使っているか
     private Vector3 moveDirection = Vector3.zero;
 
     void Start()
@@ -21,33 +24,43 @@ public class CameraMove : MonoBehaviour
     {
         if (talkScript != null && talkScript.isTalking)
         {
-            // isTalkingがtrueなら移動を禁止
+            // isTalkingがtrueなら追跡を停止
             return;
         }
 
-        Move();
-    }
-
-    void Move()
-    {
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
-
-        moveDirection = new Vector3(x, 0, z).normalized;
-
-        // 現在の位置関係を保ったまま新しい位置を計算
-        Vector3 desiredPos = transform.position + moveDirection * moveSpeed * Time.deltaTime;
-
-        if (playerTransform != null)
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            Vector3 offset = desiredPos - playerTransform.position;
-            if (offset.magnitude > maxDistance)
-            {
-                offset = offset.normalized * maxDistance;
-                desiredPos = playerTransform.position + offset;
-            }
+            isUsingAltOffset = !isUsingAltOffset; // オフセットを切り替え
         }
 
-        transform.position = desiredPos;
+        FollowPlayer();
+    }
+
+    void FollowPlayer()
+    {
+        if (playerTransform == null)
+        {
+            return;
+        }
+
+        // 使用するオフセットを選択
+        Vector3 currentOffset = isUsingAltOffset ? altOffset : offset;
+
+        // プレイヤーの位置に対する理想的なカメラ位置
+        Vector3 desiredPos = playerTransform.position + currentOffset;
+
+        // 壁との衝突を確認
+        Vector3 direction = desiredPos - playerTransform.position;
+        float distance = direction.magnitude;
+        RaycastHit hit;
+
+        // 壁に当たる場合は、その壁の手前まで移動
+        if (Physics.Raycast(playerTransform.position, direction.normalized, out hit, distance, wallLayer))
+        {
+            desiredPos = hit.point - direction.normalized * 0.2f; // 壁の手前に配置
+        }
+
+        // カメラをスムーズに移動
+        transform.position = Vector3.Lerp(transform.position, desiredPos, moveSpeed * Time.deltaTime);
     }
 }
