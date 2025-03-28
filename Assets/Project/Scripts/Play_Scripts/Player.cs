@@ -36,7 +36,7 @@ public class Player : MonoBehaviour
         {
             if (talkChecker.talkableNPC != null)
             {
-                DialogueManager.instance.StartDialogue(talkChecker.talkableNPC);
+                DialogueManager_play.instance.StartDialogue(talkChecker.talkableNPC);
                 isTalking = true;
                 objectmove.CountUp();
             }
@@ -50,13 +50,58 @@ public class Player : MonoBehaviour
 
     void PlayerMove()
     {
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
+        isPlayerMoving = false;
+        moveDirection = Vector3.zero;
 
-        moveDirection = new Vector3(x, 0, z).normalized;
-        isPlayerMoving = moveDirection.magnitude > 0.01f;
+        if (cameraScript != null && cameraScript.GetComponent<CameraMove>().IsUsingAltOffset())
+        {
+            // altOffset中の操作方法：Wで-X方向へ進む
+            if (Input.GetKey(KeyCode.W))
+            {
+                moveDirection += Vector3.left; // -X方向
+            }
+            if (Input.GetKey(KeyCode.S))
+            {
+                moveDirection += Vector3.right; // +X方向
+            }
+            if (Input.GetKey(KeyCode.A))
+            {
+                moveDirection += Vector3.back; // -Z方向
+            }
+            if (Input.GetKey(KeyCode.D))
+            {
+                moveDirection += Vector3.forward; // +Z方向
+            }
 
-        transform.Translate(moveDirection * moveSpeed * Time.deltaTime, Space.World);
+            moveDirection.Normalize();
+            isPlayerMoving = moveDirection.magnitude > 0.01f;
+
+            transform.Translate(moveDirection * moveSpeed * Time.deltaTime, Space.World);
+
+            // 向いてる方向を変える
+            if (isPlayerMoving)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(moveDirection, Vector3.up);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            }
+        }
+        else
+        {
+            // 通常の移動処理
+            float x = Input.GetAxis("Horizontal");
+            float z = Input.GetAxis("Vertical");
+
+            moveDirection = new Vector3(x, 0, z).normalized;
+            isPlayerMoving = moveDirection.magnitude > 0.01f;
+
+            transform.Translate(moveDirection * moveSpeed * Time.deltaTime, Space.World);
+
+            if (isPlayerMoving)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(moveDirection, Vector3.up);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            }
+        }
     }
 
     void RotateCharacter()
@@ -82,6 +127,11 @@ public class Player : MonoBehaviour
     public void EndConversation()
     {
         isTalking = false;
+
+        if (talkChecker != null)
+        {
+            talkChecker.SetTalkEndFlag(); 
+        }
     }
 
     private void OnTriggerEnter(Collider other)

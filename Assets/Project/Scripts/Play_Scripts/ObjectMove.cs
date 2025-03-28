@@ -8,13 +8,11 @@ public class ObjectMove : MonoBehaviour
     public int count = 0;
     public List<GameObject> Objects = new List<GameObject>();
 
-    // Start is called before the first frame update
     void Start()
     {
         count = 0;
     }
 
-    // Update is called once per frame
     void Update()
     {
 
@@ -23,5 +21,19 @@ public class ObjectMove : MonoBehaviour
     public void CountUp()
     {
         count++;
+
+        // countが1になったとき、最初のオブジェクトを非表示にする
+        if (count == 1 && Objects.Count > 0)
+        {
+            Objects[0].SetActive(false);
+        }
+        if (count == 2 && Objects.Count > 1)
+        {
+            Objects[1].SetActive(false);
+        }
+        if (count == 3 && Objects.Count > 2)
+        {
+            Objects[2].SetActive(false);
+        }
     }
 }

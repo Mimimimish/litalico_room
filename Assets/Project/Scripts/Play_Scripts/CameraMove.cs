@@ -24,7 +24,7 @@ public class CameraMove : MonoBehaviour
     {
         if (talkScript != null && talkScript.isTalking)
         {
-            // isTalkingがtrueなら追跡を停止
+            // isTalkingがtrueなら追跡・注視を停止
             return;
         }
 
@@ -62,5 +62,13 @@ public class CameraMove : MonoBehaviour
 
         // カメラをスムーズに移動
         transform.position = Vector3.Lerp(transform.position, desiredPos, moveSpeed * Time.deltaTime);
+
+        // プレイヤーの方向を見るようにする（少し上を見て顔を注視するなら + Vector3.up * 1.5f などもOK）
+        transform.LookAt(playerTransform.position);
+    }
+
+    public bool IsUsingAltOffset()
+    {
+        return isUsingAltOffset;
     }
 }

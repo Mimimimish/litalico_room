@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bb9306f8c63e8a4191e3ae3c88ba0aa, type: 3}
   m_Name: tomo1
   m_EditorClassIdentifier: 
-  talkerName: tomo
+  talkerName: "\u3068\u3082"
   sentences:
-  - Hello!
-  - I am Tomo
-  - I am Happy!
+  - "\u3048\uFF01\u306A\u3093\u3067\u3054\u308F\u3059\u304B\uFF1F"
+  - "\u307F\u3093\u306A\u96C6\u307E\u3063\u3066\u308B\u3067\u3054\u308F\u3059\u304B\uFF1F"
+  - "\u79C1\u3082\u884C\u304F\u3067\u3054\u308F\u3059\uFF01"
+  - "\u3066\u308B"
