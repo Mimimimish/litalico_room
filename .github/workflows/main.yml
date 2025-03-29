@@ -1,0 +1,29 @@
+name: Unity Code Check
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint:
+    name: Code Style and Linting
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.0.x  # Unityの.NETバージョンに合わせる
+
+      - name: Run Code Formatting Check
+        run: dotnet format --verify-no-changes || echo "Format errors detected. Run 'dotnet format' locally to fix them."
+
+      - name: Run Static Code Analysis
+        run: dotnet build --configuration Release || echo "Build errors detected."

@@ -2884,10 +2884,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u308A\u308A\u30FC,\u307D\u306B\u3087"
+  m_text: "\u308A\u308A\u30FC            \u307D\u306B\u3087"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 074ee7e09c7fd6341b2634fd1b234755, type: 2}
-  m_sharedMaterial: {fileID: 6163225254901760120, guid: 074ee7e09c7fd6341b2634fd1b234755, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 231015b1381940046a8cdebc1fa7235d, type: 2}
+  m_sharedMaterial: {fileID: 4806515716734723874, guid: 231015b1381940046a8cdebc1fa7235d, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2911,8 +2911,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 200
-  m_fontSizeBase: 200
+  m_fontSize: 220
+  m_fontSizeBase: 220
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -3121,10 +3121,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u304C\u3044\u3058\n\u4ECA\u65E5\u306F\u307F\u3093\u306A\u6765\u3066\u304F\u308C\u3066\u3042\u308A\u304C\u3068\u3046\uFF01\n\u307F\u3093\u306A\u306E\u65B0\u305F\u306A\u5834\u306E\u6210\u9577\u3092\u3001\u30EA\u30BF\u30EA\u30B3\u4E00\u540C\u697D\u3057\u307F\u3057\u3066\u308B\u3088\u6539\u3081\u3066\u307F\u3093\u306A\u5352\u696D\u304A\u3081\u3067\u3068\u3046\uFF01\n"
+  m_text: "\u4ECA\u65E5\u306F\u307F\u3093\u306A\u6765\u3066\u304F\u308C\u3066\u3042\u308A\u304C\u3068\u3046\uFF01\n\u307F\u3093\u306A\u306E\u65B0\u305F\u306A\u5834\u306E\u6D3B\u8E8D\u3092\u3001\u30EA\u30BF\u30EA\u30B3\u4E00\u540C\u697D\u3057\u307F\u3057\u3066\u308B\u3088\u6539\u3081\u3066\u307F\u3093\u306A\u5352\u696D\u304A\u3081\u3067\u3068\u3046\uFF01\n"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 074ee7e09c7fd6341b2634fd1b234755, type: 2}
-  m_sharedMaterial: {fileID: 6163225254901760120, guid: 074ee7e09c7fd6341b2634fd1b234755, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 231015b1381940046a8cdebc1fa7235d, type: 2}
+  m_sharedMaterial: {fileID: 4806515716734723874, guid: 231015b1381940046a8cdebc1fa7235d, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3429,7 +3429,7 @@ MonoBehaviour:
   deletePoint: {fileID: 1127741964}
   centerPoint: {fileID: 1084069993}
   endrollData: {fileID: 11400000, guid: b7a59733b47c53c47af1a605f323250a, type: 2}
-  scrollSpeed: 50
+  scrollSpeed: 70
   spawnInterval: 2
 --- !u!1 &1601639786
 GameObject:
