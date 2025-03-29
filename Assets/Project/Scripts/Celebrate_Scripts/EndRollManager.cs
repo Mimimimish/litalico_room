@@ -19,8 +19,8 @@ public class EndRollManager : MonoBehaviour
     public EndrollData endrollData; // ScriptableObjectで管理するデータ
 
     [SerializeField, Header("【スクロール設定】")]
-    public float scrollSpeed = 50f; // テキストが上に流れる速度
-    public float spawnInterval = 3.0f; // 文字を出す間隔（秒）
+    public float scrollSpeed; // テキストが上に流れる速度
+    public float spawnInterval; // 文字を出す間隔（秒）
 
     void Start()
     {
@@ -40,7 +40,7 @@ public class EndRollManager : MonoBehaviour
         }
 
         // すべてのエンドロールが終わったら10秒待機
-        yield return new WaitForSeconds(10f);
+        yield return new WaitForSeconds(spawnInterval*3);
         
         // 最後のメッセージを表示
         ShowFinalMessage("卒業おめでとう！！");
