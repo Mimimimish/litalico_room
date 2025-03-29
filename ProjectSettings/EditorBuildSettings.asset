@@ -9,12 +9,9 @@ EditorBuildSettings:
     path: Assets/Project/Scenes/Start.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 1
-    path: Assets/Project/Scenes/classroom.unity
-    guid: 2f99ead3618344cdc85329d67863d3f8
+    path: Assets/scene/reception.unity
+    guid: 6d923bb084c904dfca3bb663e166bb7d
   - enabled: 1
-    path: Assets/Project/Scenes/celebrate.unity
-    guid: f70c1d2113c054aa2b5b8e3e5ffbbf8b
-  - enabled: 1
-    path: Assets/Project/Scenes/ending.unity
-    guid: c761e10e17b6f415880fa15120dc30d1
+    path: Assets/Project/Scenes/Play.unity
+    guid: 58669f4a6a37a4cdf8412812a7e74559
   m_configObjects: {}
