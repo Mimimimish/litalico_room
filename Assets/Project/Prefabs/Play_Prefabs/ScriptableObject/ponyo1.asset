@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2bb9306f8c63e8a4191e3ae3c88ba0aa, type: 3}
-  m_Name: daodao1
+  m_Name: ponyo1
   m_EditorClassIdentifier: 
-  talkerName: "\u3060\u304A\u3060\u304A"
+  talkerName: "\u307D\u306B\u3087"
   sentences:
-  - "\u304A\u3001\u30EA\u30EA\u30FC\u3058\u3083\u3093\u3002"
-  - "\u307F\u3093\u306A\u3067"
-  - I`m happy!
+  - "\u3042\u3001\u30EA\u30EA\u30FC\u3055\u3093\uFF01"
+  - "\u307F\u305F\u3089\u3057\u56E3\u5B50\u6D17\u3063\u3066\u304F\u308C\u305F\u3093\u3067\u3059\u304B\uFF01"
+  - arigatou

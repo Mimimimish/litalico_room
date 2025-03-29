@@ -15,6 +15,17 @@ public class NPCMove : MonoBehaviour
     public float rotationSpeed = 5f;
     private bool isCoroutineRunning = false;
 
+    public Transform postTalkTarget;
+    private bool hasMovedToTarget = false;
+    private bool useNavMesh = true;
+
+    private float stuckTimer = 0f;
+    private float stuckDuration = 0.1f; // 1秒間動かなかったら手動に切り替える
+    private Vector3 lastPosition;
+
+    public float fallbackMoveSpeed = 2f;
+    public float fallbackStopDistance = 0.2f;
+
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -31,14 +42,71 @@ public class NPCMove : MonoBehaviour
         }
         else
         {
-            agent.isStopped = false;
-            if (!isCoroutineRunning)
+            if (!hasMovedToTarget && postTalkTarget != null)
             {
-                StartCoroutine(RandomMove());
+                string npcTag = gameObject.tag;
+                TalkChecker checker = player.GetComponent<TalkChecker>();
+                if (checker != null && checker.GetTalkEndFlagByTag(npcTag))
+                {
+                    StopAllCoroutines();
+                    agent.isStopped = false;
+                    hasMovedToTarget = true;
+                    useNavMesh = true;
+                    stuckTimer = 0f;
+                    lastPosition = transform.position;
+
+                    // NavMesh補正付きで目的地設定
+                    Vector3 finalDestination = postTalkTarget.position;
+                    NavMeshHit hit;
+                    if (NavMesh.SamplePosition(postTalkTarget.position, out hit, 5f, NavMesh.AllAreas))
+                    {
+                        finalDestination = hit.position;
+                    }
+                    agent.SetDestination(finalDestination);
+                    isMoving = true;
+                }
+            }
+
+            if (hasMovedToTarget)
+            {
+                if (useNavMesh)
+                {
+                    if (!agent.pathPending && agent.remainingDistance < 0.5f)
+                    {
+                        isMoving = false;
+                        hasMovedToTarget = false;
+                        agent.isStopped = true;
+                        // ランダム移動再開は行わない
+                        return;
+                    }
+
+                    if (Vector3.Distance(transform.position, lastPosition) < 0.01f)
+                    {
+                        stuckTimer += Time.deltaTime;
+                        if (stuckTimer >= stuckDuration)
+                        {
+                            Debug.Log("1秒間位置が変化しなかったため、手動移動に切り替え");
+                            agent.isStopped = true;
+                            useNavMesh = false;
+                        }
+                    }
+                    else
+                    {
+                        stuckTimer = 0f;
+                        lastPosition = transform.position;
+                    }
+                }
+                else
+                {
+                    MoveToTargetManually();
+                }
+            }
+
+            if (!hasMovedToTarget)
+            {
+                CheckObstacle();
             }
         }
-
-        CheckObstacle();
     }
 
     void LookAtPlayer()
@@ -49,6 +117,28 @@ public class NPCMove : MonoBehaviour
         direction.y = 0;
         Quaternion targetRotation = Quaternion.LookRotation(direction);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+    }
+
+    void MoveToTargetManually()
+    {
+        Vector3 targetPos = postTalkTarget.position;
+        targetPos.y = transform.position.y;
+
+        Vector3 direction = (targetPos - transform.position).normalized;
+        transform.position = Vector3.MoveTowards(transform.position, targetPos, fallbackMoveSpeed * Time.deltaTime);
+
+        if (direction != Vector3.zero)
+        {
+            Quaternion targetRot = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, rotationSpeed * Time.deltaTime);
+        }
+
+        if (Vector3.Distance(transform.position, targetPos) < fallbackStopDistance)
+        {
+            isMoving = false;
+            hasMovedToTarget = false;
+            // ランダム移動再開は行わない
+        }
     }
 
     IEnumerator RandomMove()
