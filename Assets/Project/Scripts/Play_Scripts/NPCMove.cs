@@ -20,7 +20,7 @@ public class NPCMove : MonoBehaviour
     private bool useNavMesh = true;
 
     private float stuckTimer = 0f;
-    private float stuckDuration = 0.1f; // 1秒間動かなかったら手動に切り替える
+    private float stuckDuration = 0.1f;
     private Vector3 lastPosition;
 
     public float fallbackMoveSpeed = 2f;
@@ -36,7 +36,7 @@ public class NPCMove : MonoBehaviour
     {
         if (player != null && player.isTalking)
         {
-            agent.isStopped = true;
+            if (agent.enabled) agent.isStopped = true;
             isMoving = false;
             LookAtPlayer();
         }
@@ -49,13 +49,20 @@ public class NPCMove : MonoBehaviour
                 if (checker != null && checker.GetTalkEndFlagByTag(npcTag))
                 {
                     StopAllCoroutines();
+
+                    // NavMeshAgent を再有効化して目的地をセット
+                    if (!agent.enabled)
+                    {
+                        agent.enabled = true;
+                        Debug.Log($"{gameObject.name}：NavMeshAgent を再有効化しました。");
+                    }
+
                     agent.isStopped = false;
                     hasMovedToTarget = true;
                     useNavMesh = true;
                     stuckTimer = 0f;
                     lastPosition = transform.position;
 
-                    // NavMesh補正付きで目的地設定
                     Vector3 finalDestination = postTalkTarget.position;
                     NavMeshHit hit;
                     if (NavMesh.SamplePosition(postTalkTarget.position, out hit, 5f, NavMesh.AllAreas))
@@ -76,7 +83,6 @@ public class NPCMove : MonoBehaviour
                         isMoving = false;
                         hasMovedToTarget = false;
                         agent.isStopped = true;
-                        // ランダム移動再開は行わない
                         return;
                     }
 
@@ -85,8 +91,9 @@ public class NPCMove : MonoBehaviour
                         stuckTimer += Time.deltaTime;
                         if (stuckTimer >= stuckDuration)
                         {
-                            Debug.Log("1秒間位置が変化しなかったため、手動移動に切り替え");
+                            Debug.Log($"{gameObject.name}：NavMesh から手動移動に切り替え");
                             agent.isStopped = true;
+                            agent.enabled = false;  // ★ 無効化
                             useNavMesh = false;
                         }
                     }
@@ -137,7 +144,6 @@ public class NPCMove : MonoBehaviour
         {
             isMoving = false;
             hasMovedToTarget = false;
-            // ランダム移動再開は行わない
         }
     }
 
@@ -150,8 +156,11 @@ public class NPCMove : MonoBehaviour
             if (!isMoving)
             {
                 Vector3 randomDestination = GetRandomPoint(transform.position, moveRadius);
-                agent.SetDestination(randomDestination);
-                isMoving = true;
+                if (agent.enabled)
+                {
+                    agent.SetDestination(randomDestination);
+                    isMoving = true;
+                }
             }
 
             yield return new WaitUntil(() => agent.remainingDistance < 0.5f);
@@ -199,7 +208,10 @@ public class NPCMove : MonoBehaviour
         NavMeshHit hit;
         if (NavMesh.SamplePosition(newDestination, out hit, moveRadius, NavMesh.AllAreas))
         {
-            agent.SetDestination(hit.position);
+            if (agent.enabled)
+            {
+                agent.SetDestination(hit.position);
+            }
         }
     }
 }

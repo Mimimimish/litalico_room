@@ -19,7 +19,7 @@ public class NPCAnimation : MonoBehaviour
         if (player != null && player.isTalking)
         {
             // 会話中
-            animatorWalking.SetBool("Walking", false);
+            animatorWalking.SetBool("isWalking", false);
             animatorTalking.SetBool("Talking", true);
         }
         else
@@ -27,7 +27,7 @@ public class NPCAnimation : MonoBehaviour
             animatorTalking.SetBool("Talking", false);
 
             // 移動中ならWalkingをtrueに、それ以外はfalse
-            animatorWalking.SetBool("Walking", npcMove.isMoving);
+            animatorWalking.SetBool("isWalking", npcMove.isMoving);
         }
     }
 }

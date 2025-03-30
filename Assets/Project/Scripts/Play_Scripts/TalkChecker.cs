@@ -12,26 +12,35 @@ public class TalkChecker : MonoBehaviour
     public bool ebiTalkEnded = false;
     public bool tomoTalkEnded = false;
     public bool matsuTalkEnded = false;
+    public bool ponyoTalkEnded = false;
 
-    private string lastTag = "";
+    public string lastTag = "";
 
     private void OnTriggerEnter(Collider col)
     {
-        if (col.CompareTag("Dao") || col.CompareTag("Ebi") || col.CompareTag("Tomo") || col.CompareTag("Matsu"))
+        string tag = col.tag;
+
+        if (IsTalkableTag(tag))
         {
-            NPC target = col.gameObject.GetComponent<NPC>();
-            if (target != null)
+            // 解禁されているかを確認
+            if (IsTalkAllowed(tag))
             {
-                talkableNPC = target;
-                target.talkIcon.SetActive(true);
-                lastTag = col.tag; // 最後に話していたNPCのタグを保存
+                NPC target = col.gameObject.GetComponent<NPC>();
+                if (target != null)
+                {
+                    talkableNPC = target;
+                    target.talkIcon.SetActive(true);
+                    lastTag = tag;
+                }
             }
         }
     }
 
     private void OnTriggerExit(Collider col)
     {
-        if (col.CompareTag("Dao") || col.CompareTag("Ebi") || col.CompareTag("Tomo") || col.CompareTag("Matsu"))
+        string tag = col.tag;
+
+        if (IsTalkableTag(tag))
         {
             NPC target = col.gameObject.GetComponent<NPC>();
             if (target != null)
@@ -45,6 +54,7 @@ public class TalkChecker : MonoBehaviour
         }
     }
 
+    // 解禁フラグを立てる関数
     public void SetTalkEndFlag()
     {
         switch (lastTag)
@@ -61,6 +71,35 @@ public class TalkChecker : MonoBehaviour
             case "Matsu":
                 matsuTalkEnded = true;
                 break;
+            case "Ponyo":
+                ponyoTalkEnded = true;
+                break;
+        }
+    }
+
+    // 現在のタグが話しかけ対象か確認
+    private bool IsTalkableTag(string tag)
+    {
+        return tag == "Dao" || tag == "Ebi" || tag == "Tomo" || tag == "Matsu" || tag == "Ponyo";
+    }
+
+    // 指定タグが話しかけ可能かどうかを判定
+    public bool IsTalkAllowed(string tag)
+    {
+        switch (tag)
+        {
+            case "Ponyo":
+                return true;
+            case "Dao":
+                return ponyoTalkEnded;
+            case "Ebi":
+                return daoTalkEnded;
+            case "Matsu":
+                return ebiTalkEnded;
+            case "Tomo":
+                return matsuTalkEnded;
+            default:
+                return false;
         }
     }
 
@@ -76,6 +115,8 @@ public class TalkChecker : MonoBehaviour
                 return tomoTalkEnded;
             case "Matsu":
                 return matsuTalkEnded;
+            case "Ponyo":
+                return ponyoTalkEnded;
             default:
                 return false;
         }

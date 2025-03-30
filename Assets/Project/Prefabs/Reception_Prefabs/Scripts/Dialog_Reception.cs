@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-
+using UnityEngine.SceneManagement; // ← 追加：シーン遷移のため
 
 public class Dialog_Reception : MonoBehaviour
 {
     public static Dialog_Reception instance;
     public bool talk_finish_C = false;
-    
+
     [SerializeField, Header("【別スクリプトの参照】")]
     public CircleFade_Reception circleFade_reception;
-    
+
     [SerializeField, Header("【会話のUI】")]
     public GameObject UI_Dialogue_C;
     public GameObject Next_bottun_C;
@@ -24,15 +24,15 @@ public class Dialog_Reception : MonoBehaviour
     public string talkerName_C;
 
     [SerializeField, Header("【会話音の設定】")]
-    public AudioSource voiceSource_C;  // 会話音の AudioSource
-    public AudioClip voiceClip_C;      // 再生する音声クリップ
+    public AudioSource voiceSource_C;
+    public AudioClip voiceClip_C;
 
     [SerializeField, Header("[BGM]")]
-    public AudioSource BGMSource_C;  // BGMの AudioSource
-    public AudioClip BGMClip_C;      // BGM音声クリップ
-    // キュー：
+    public AudioSource BGMSource_C;
+    public AudioClip BGMClip_C;
+
     Queue<string> sentences_C = new Queue<string>();
-    private Coroutine typingCoroutine_C; // 現在のタイピングコルーチンを管理
+    private Coroutine typingCoroutine_C;
 
     void Awake()
     {
@@ -51,7 +51,6 @@ public class Dialog_Reception : MonoBehaviour
 
     void Update()
     {
-        // Nextボタンがアクティブのときに左クリックしたら次の文章を表示
         if (Next_bottun_C.activeSelf && Input.GetMouseButtonDown(0))
         {
             DisplaySentence();
@@ -64,10 +63,9 @@ public class Dialog_Reception : MonoBehaviour
         BGMSource_C.clip = BGMClip_C;
         BGMSource_C.Play();
         yield return new WaitForSeconds(0.8f);
-        StartDialogue(); // 条件が満たされたら実行
+        StartDialogue();
     }
 
-    // 会話の実行関数
     public void StartDialogue()
     {
         sentences_C.Clear();
@@ -80,7 +78,6 @@ public class Dialog_Reception : MonoBehaviour
         DisplaySentence();
     }
 
-    // 会話の表示関数
     public void DisplaySentence()
     {
         Next_bottun_C.SetActive(false);
@@ -93,52 +90,47 @@ public class Dialog_Reception : MonoBehaviour
         string sentence = sentences_C.Dequeue();
         dialogName_C.text = talkerName_C;
 
-        // もし既にコルーチンが動いていたら停止する
         if (typingCoroutine_C != null)
         {
             StopCoroutine(typingCoroutine_C);
-            voiceSource_C.Stop(); // 音も止める
+            voiceSource_C.Stop();
         }
 
-        // タイピングエフェクトを開始
         typingCoroutine_C = StartCoroutine(TypeSentence(sentence));
     }
 
-    // 会話を一文字ずつ表示させるコルーチン&会話音
     IEnumerator TypeSentence(string sentence)
     {
-        dialogText_C.text = ""; // テキストをリセット
+        dialogText_C.text = "";
 
-        // 会話音を再生（ループON）
         if (voiceClip_C != null)
         {
             voiceSource_C.clip = voiceClip_C;
-            voiceSource_C.loop = true; // ループ再生
+            voiceSource_C.loop = true;
             voiceSource_C.Play();
         }
 
-        foreach (char letter in sentence.ToCharArray()) // 1文字ずつ表示
+        foreach (char letter in sentence.ToCharArray())
         {
             dialogText_C.text += letter;
-            yield return new WaitForSeconds(0.10f); // 文字が表示される間隔
+            yield return new WaitForSeconds(0.10f);
         }
+
         Next_bottun_C.SetActive(true);
         yield return new WaitForSeconds(0.05f);
-        // 文章の表示が終わったら音を止める
         voiceSource_C.Stop();
-        typingCoroutine_C = null; // コルーチン終了
+        typingCoroutine_C = null;
     }
 
-    // 会話の終わり時に動く関数
     public void EndDialogue()
     {
-        if (talk_finish_C) return; // すでに終了処理が走っていたら何もしない
-        talk_finish_C = true; // 会話終了フラグを立てる
-        UI_Dialogue_C.SetActive(false);
-        voiceSource_C.Stop(); // 会話終了時に音も止める
+        if (talk_finish_C) return;
 
-        StartCoroutine(FadeOutAndStop(BGMSource_C, 4.0f)); // 4.0秒でフェードアウト
-        //StartCoroutine(BGMStart());
+        talk_finish_C = true;
+        UI_Dialogue_C.SetActive(false);
+        voiceSource_C.Stop();
+        StartCoroutine(FadeOutAndStop(BGMSource_C, 4.0f));
+        StartCoroutine(LoadNextSceneAfterDelay(4.0f)); // ← 追加：フェード後にシーン遷移
     }
 
     IEnumerator FadeOutAndStop(AudioSource BGMSource, float duration)
@@ -151,17 +143,22 @@ public class Dialog_Reception : MonoBehaviour
             yield return null;
         }
 
-        BGMSource.Stop();  // 音を完全に止める
-        BGMSource.volume = startVolume; // 音量を元に戻す（再利用のため）
+        BGMSource.Stop();
+        BGMSource.volume = startVolume;
     }
-    // endrollのときのBGM再生　（）
+
+    IEnumerator LoadNextSceneAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        SceneManager.LoadScene("Play"); // ← ここで"Play"シーンをロード
+    }
+
     IEnumerator BGMStart()
     {
         yield return new WaitForSeconds(0.05f);
 
-        // もし現在再生中のClipがBGMClip_Cなら再生しない
         if (voiceSource_C.clip == BGMClip_C && voiceSource_C.isPlaying) yield break;
-        voiceSource_C.loop = false; // ループ再生
+        voiceSource_C.loop = false;
         voiceSource_C.clip = BGMClip_C;
         voiceSource_C.Play();
     }

@@ -19,11 +19,15 @@ public class PlayerAnimation : MonoBehaviour
     {
         if (player.isPlayerMoving)
         {
-            animator.SetBool("Walking", true);
+            animator.SetBool("isWalking", true);
+        }
+        else if (player.isTalking)
+        {
+            animator.SetBool("isWalking", false);
         }
         else
         {
-            animator.SetBool("Walking", false);
+            animator.SetBool("isWalking", false);
         }
 
         if (player.isTalking)
