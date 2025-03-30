@@ -4,10 +4,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-
 public class DialogueManager_play : MonoBehaviour
 {
     public static DialogueManager_play instance;
+
     [Header("【UI】")]
     public GameObject UI_Dialogue;
     public GameObject UI_Dialogue2;
@@ -23,11 +23,11 @@ public class DialogueManager_play : MonoBehaviour
 
     [Header("【音声設定】")]
     public AudioSource voiceSource;
-    public AudioClip voiceClip;     // 会話時の音
-    public AudioClip BGMClip;       // 会話後のBGM
+    public AudioClip voiceClip;
+    public AudioClip BGMClip;
 
     [Header("【フェード制御】")]
-    public CircleFade circleFade;   // CircleFadeスクリプト参照
+    public CircleFade circleFade;
 
     private Queue<string> sentences = new Queue<string>();
     private Coroutine typingCoroutine;
@@ -40,6 +40,7 @@ public class DialogueManager_play : MonoBehaviour
         talkerName = null;
         UI_Dialogue.SetActive(false);
         UI_Dialogue2.SetActive(false);
+
         if (instance == null)
         {
             instance = this;
@@ -49,14 +50,20 @@ public class DialogueManager_play : MonoBehaviour
             Destroy(gameObject);
         }
 
-        // CircleFade完了待ち
         StartCoroutine(WaitForFadeIn());
     }
 
     IEnumerator WaitForFadeIn()
     {
-        yield return new WaitUntil(() => circleFade != null && circleFade.fadeIn == true);
-        // 必要なら StartDialogue をここから呼び出せます
+        yield return new WaitUntil(() => circleFade != null && circleFade.fadeIn);
+
+        // ✅ フェードイン後に BGM 再生
+        if (BGMClip != null)
+        {
+            voiceSource.clip = BGMClip;
+            voiceSource.loop = true;
+            voiceSource.Play();
+        }
     }
 
     public void StartDialogue(NPC npc, bool useSecondUI = false)
@@ -72,6 +79,12 @@ public class DialogueManager_play : MonoBehaviour
         foreach (string sentence in npc.dialogData.Sentences)
         {
             sentences.Enqueue(sentence);
+        }
+
+        // ✅ BGM を止める
+        if (voiceSource.isPlaying && voiceSource.clip == BGMClip)
+        {
+            voiceSource.Stop();
         }
 
         if (useSecondUI)
@@ -111,6 +124,7 @@ public class DialogueManager_play : MonoBehaviour
         dialogName.text = talkerName;
         dialogText.text = "";
 
+        // ✅ 会話音を再生（voiceClip）
         if (voiceClip != null)
         {
             voiceSource.clip = voiceClip;
@@ -142,6 +156,8 @@ public class DialogueManager_play : MonoBehaviour
         player.EndConversation();
 
         voiceSource.Stop();
+
+        // ✅ BGMを再開
         StartCoroutine(PlayBGM());
     }
 
@@ -151,7 +167,7 @@ public class DialogueManager_play : MonoBehaviour
 
         if (voiceSource.clip == BGMClip && voiceSource.isPlaying) yield break;
 
-        voiceSource.loop = false;
+        voiceSource.loop = true;
         voiceSource.clip = BGMClip;
         voiceSource.Play();
     }

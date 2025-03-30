@@ -1,68 +1,113 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraScript : MonoBehaviour
 {
+    [Header("現在の会話対象プレイヤー")]
     public Player currentTalkScript;
-    public Transform originalPosition; // 会話開始前のカメラ位置を保存
-    public Vector3 talkPosition;
-    public Vector3 lookTarget;
-    public float speed = 5f;
-    private bool hasSavedPosition = false; // 位置を保存したかどうか
 
-    // 障害物透明化関連
-    private float rayMaxDistance;
-    private Vector3 rayDirection;
+    [Header("カメラの各ポジション")]
+    public Transform defaultPosition;
+    public Transform originalPosition;
+    public Transform playerTransform;
+
+    [Header("座標オフセット")]
+    public Vector3 offset = new Vector3(0, 5, -10);
+    public Vector3 altOffset = new Vector3(0, 8, -5);
+    public float offsetX = 0f;
+    public float offsetY = 3f;
+    public float offsetZ = -4f;
+
+    [Header("設定値")]
+    public float speed = 5f;
+    public LayerMask wallLayer;
+    public LayerMask objectMask;
+
+    private bool isUsingAltOffset = false;
+    private bool hasSavedPosition = false;
+
+    void Start()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
 
     void Update()
     {
-        if (currentTalkScript != null)
+        if (currentTalkScript != null && currentTalkScript.isTalking)
         {
-            if (currentTalkScript.isTalking)
+            if (!hasSavedPosition && originalPosition != null)
             {
-                if (!hasSavedPosition)
-                {
-                    hasSavedPosition = true;
-                }
-                MoveCamera(talkPosition, lookTarget);
+                originalPosition.position = transform.position;
+                hasSavedPosition = true;
             }
-            if (currentTalkScript.isTalking == false)
+
+            Vector3 targetPos = currentTalkScript.transform.position + new Vector3(offsetX, offsetY, offsetZ);
+            MoveCamera(targetPos);
+            PerformRaycast(currentTalkScript.transform);
+        }
+        else
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
             {
-                if (hasSavedPosition == true)
-                {
-                    MoveCameraReset(originalPosition.position); // 会話終了時に元の位置へ戻る
-                }
+                isUsingAltOffset = !isUsingAltOffset;
             }
+
+            FollowPlayer();
         }
     }
 
-    void MoveCamera(Vector3 targetPos, Vector3 lookTarget)
+    void FollowPlayer()
     {
-        transform.position = Vector3.Slerp(
-            transform.position,
-            targetPos,
-            speed * Time.deltaTime
-        );
+        if (playerTransform == null) return;
 
-        this.transform.LookAt(lookTarget);
+        Vector3 currentOffset = isUsingAltOffset ? altOffset : offset;
+        Vector3 desiredPos = playerTransform.position + currentOffset;
 
-        // transform.rotation = Quaternion.Euler(0, 0, 0);
+        Vector3 direction = desiredPos - playerTransform.position;
+        float distance = direction.magnitude;
+
+        if (Physics.Raycast(playerTransform.position, direction.normalized, out RaycastHit hit, distance, wallLayer))
+        {
+            desiredPos = hit.point - direction.normalized * 0.2f;
+        }
+
+        transform.position = Vector3.Lerp(transform.position, desiredPos, speed * Time.deltaTime);
+        transform.LookAt(playerTransform.position);
+    }
+
+    void MoveCamera(Vector3 targetPos)
+    {
+        transform.position = Vector3.Lerp(transform.position, targetPos, speed * Time.deltaTime);
+        transform.rotation = Quaternion.Euler(0, 0, 0);
     }
 
     void MoveCameraReset(Vector3 targetPos)
     {
-        transform.position = Vector3.Lerp(
-            transform.position,
-            targetPos,
-            speed * Time.deltaTime
-        );
+        transform.position = Vector3.Lerp(transform.position, targetPos, speed * Time.deltaTime);
         transform.rotation = Quaternion.Euler(40f, 0, 0);
     }
 
-    public void SetTalkPosition(Vector3 position, Vector3 target)
+    public void SetTalkPosition(Vector3 position)
     {
-        talkPosition = position;
-        lookTarget = target;
+        Transform tempTransform = new GameObject("TempTalkPosition").transform;
+        tempTransform.position = position;
+    }
+
+    void PerformRaycast(Transform target)
+    {
+        Vector3 direction = target.position - transform.position;
+        if (Physics.Raycast(transform.position, direction, out RaycastHit hit, direction.magnitude, objectMask))
+        {
+            MeshRenderer meshRenderer = hit.collider.GetComponent<MeshRenderer>();
+            if (meshRenderer != null)
+            {
+                meshRenderer.enabled = false;
+            }
+        }
+    }
+
+    public bool IsUsingAltOffset()
+    {
+        return isUsingAltOffset;
     }
 }

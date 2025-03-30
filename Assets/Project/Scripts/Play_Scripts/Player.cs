@@ -7,8 +7,8 @@ public class Player : MonoBehaviour
     public float moveSpeed = 5f;
     public float rotationSpeed = 10f;
     public float angleDegrees = -30f;
-    // Player.cs 内に追記
     private Vector3 moveDirection = Vector3.zero;
+    public GameObject GoalObject;
 
     [SerializeField] public bool isplayer;
     [SerializeField] private TalkChecker talkChecker;
@@ -24,10 +24,15 @@ public class Player : MonoBehaviour
     public bool isGoalTriggered { get; set; }
     private bool sceneLoaded = false;
 
+    [Header("アニメーション")]
+    public Animator animator;
+
     void Start()
     {
+        animator = GetComponent<Animator>();
         talkChecker = GetComponent<TalkChecker>();
         isplayer = true;
+        GoalObject.SetActive(false); 
     }
 
     void Update()
@@ -40,7 +45,7 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E))
         {
-            if (talkChecker.talkableNPC != null)
+            if (talkChecker.talkableNPC != null && animator != null && !animator.GetBool("isWalking"))
             {
                 DialogueManager_play.instance.StartDialogue(talkChecker.talkableNPC);
                 isTalking = true;
@@ -53,11 +58,14 @@ public class Player : MonoBehaviour
             LookAtNPC();
         }
 
-        // ✅ フェードアウト完了後にシーン遷移（Celebrate）を実行
         if (circleFade != null && circleFade.fadeOut && isGoalTriggered && !sceneLoaded)
         {
             sceneLoaded = true;
             SceneManager.LoadScene("celebrate");
+        }
+        if (objectmove.count >=5)
+        {
+            GoalObject.SetActive(true);
         }
     }
 
@@ -90,6 +98,11 @@ public class Player : MonoBehaviour
             Quaternion targetRotation = Quaternion.LookRotation(moveDirection, Vector3.up);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
+
+        if (animator != null)
+        {
+            animator.SetBool("isWalking", isPlayerMoving);
+        }
     }
 
     void RotateCharacter()
@@ -119,24 +132,21 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        // ✅ Goal に触れて、かつ ObjectMove のカウントが 5 以上のときのみ発動
         if (other.CompareTag("Goal"))
         {
             Debug.Log("🎯 Goalに到達");
-            if(objectmove.count >= 5)
+            if (objectmove.count >= 5)
             {
                 Debug.Log("🎯 カウント5達成");
                 if (!isGoalTriggered)
                 {
                     isGoalTriggered = true;
-                    Debug.Log("🎯 Goalに到達＆カウント5達成 → フェードアウト要求");
+                    Debug.Log("🎯 フェードアウト要求");
                 }
             }
-            
             return;
         }
 
-        // NPC カメラ制御処理
         if (other.CompareTag("Dao") || other.CompareTag("Ebi") || other.CompareTag("Tomo") || other.CompareTag("Matsu"))
         {
             float angleDeg = angleDegrees;
@@ -156,9 +166,8 @@ public class Player : MonoBehaviour
             Vector3 rotatedDir = rotation * perpendicular;
             Vector3 talkPos = midPosition + rotatedDir * 5.5f;
             talkPos.y = this.transform.position.y;
-            Vector3 lookTarget = midPosition;
 
-            cameraScript?.SetTalkPosition(talkPos, lookTarget);
+            cameraScript?.SetTalkPosition(talkPos); // 修正：引数は1つに
         }
     }
 }

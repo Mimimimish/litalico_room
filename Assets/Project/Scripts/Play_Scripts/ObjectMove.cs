@@ -23,15 +23,15 @@ public class ObjectMove : MonoBehaviour
         count++;
 
         // countが1になったとき、最初のオブジェクトを非表示にする
-        if (count == 1 && Objects.Count > 0)
+        if (count == 2 && Objects.Count > 0)
         {
             Objects[0].SetActive(false);
         }
-        if (count == 2 && Objects.Count > 1)
+        if (count == 3 && Objects.Count > 1)
         {
             Objects[1].SetActive(false);
         }
-        if (count == 3 && Objects.Count > 2)
+        if (count == 4 && Objects.Count > 2)
         {
             Objects[2].SetActive(false);
         }
